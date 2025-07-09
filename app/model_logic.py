@@ -25,7 +25,7 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
 
     try:
         print(f"🌐 Downloading file from URL: {file_path}")
-        response = requests.get(file_path)
+        response = pd.read_csv(file_path, encoding='ISO-8859-1')
         response.raise_for_status()
         test_df = pd.read_csv(BytesIO(response.content), encoding='ISO-8859-1')
         print("✅ File successfully loaded from URL")
