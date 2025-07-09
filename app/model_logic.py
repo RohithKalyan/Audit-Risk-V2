@@ -9,29 +9,26 @@ warnings.filterwarnings("ignore")
 def run_full_pipeline(file_path: str) -> pd.DataFrame:
     # ✅ Lazy load heavy packages here
     from catboost import CatBoostClassifier
-    import requests
-    from io import BytesIO
 
     # === PART B: Load Model + Data + Initial Cleanup ===
 
     try:
         print("📦 Loading CatBoost model...")
         model = CatBoostClassifier()
-        model.load_model("models/catboost_v2_model.cbm")
+        model.load_model("models/catboost_v2_no_bert.cbm")
         print("✅ CatBoost model loaded")
     except Exception as e:
         print("❌ Failed to load CatBoost model:", str(e))
         raise
 
     try:
-        print(f"🌐 Downloading file from URL: {file_path}")
-        response = pd.read_csv(file_path, encoding='ISO-8859-1')
-        response.raise_for_status()
-        test_df = pd.read_csv(BytesIO(response.content), encoding='ISO-8859-1')
-        print("✅ File successfully loaded from URL")
+        print(f"📄 Reading file from local path: {file_path}")
+        test_df = pd.read_csv(file_path, encoding='ISO-8859-1')
+        print("✅ File successfully loaded from local path")
     except Exception as e:
-        print("❌ Failed to fetch and read CSV from URL:", str(e))
+        print("❌ Failed to read CSV from local path:", str(e))
         raise
+
     test_df.columns = test_df.columns.str.strip()
     original_columns = test_df.columns.tolist()
 
@@ -96,7 +93,7 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
                                   (df.duplicated(subset=["Document Number"], keep=False) & ~df.duplicated(subset=["Accounting Date", "Document Number"], keep=False)) |
                                   df.duplicated(subset=["Accounting Date", "Line Desc", "Account Code"], keep=False)).astype(int))
     def cp_04(row): return cp_02(row)
-    def cp_07_flags(df): return (df.groupby("Document Number")["Net Amount"].transform("sum").round(2) != 0).astype(int)
+    def cp_07_flags(df): return (df.groupby("Document Number")[["Net Amount"]].transform("sum").round(2) != 0).astype(int)
     def cp_08(row): return int("cash in hand" in f"{row.get('Account Name', '')} {row.get('Line Desc', '')} {row.get('Source Desc', '')}".lower())
     def cp_09_flags(df):
         result = pd.Series(0, index=df.index)
