@@ -38,7 +38,18 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
         print("❌ Failed to load BERT model:", str(e))
         raise
 
-    test_df = pd.read_csv(file_path, encoding='ISO-8859-1')
+    import requests
+    from io import BytesIO
+
+    try:
+        print(f"🌐 Downloading file from URL: {file_path}")
+        response = requests.get(file_path)
+        response.raise_for_status()
+        test_df = pd.read_csv(BytesIO(response.content), encoding='ISO-8859-1')
+        print("✅ File successfully loaded from URL")
+    except Exception as e:
+        print("❌ Failed to fetch and read CSV from URL:", str(e))
+        raise
     test_df.columns = test_df.columns.str.strip()
     original_columns = test_df.columns.tolist()
 
