@@ -103,7 +103,7 @@ async def process_and_callback(file_url: str, callback_url: str):
         preview = result_df.head(10).to_dict(orient="records")
         print("🚨 Type of result_df:", type(result_df))
         print("🚀 Preview about to send:", preview)
-        requests.post(callback_url, json=preview)
+        requests.post(callback_url, json={"results": preview})
 
     except Exception as e:
         error_payload = {"error": str(e), "traceback": traceback.format_exc()}
