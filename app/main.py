@@ -60,6 +60,8 @@ async def predict(request: FileURLRequest):
 
         # Return top 10 preview
         preview = result_df.head(10).to_dict(orient="records")
+        print("🚨 Type of result_df:", type(result_df))
+        print("🚀 Preview about to send:", preview)
         logging.info("✅ Prediction successful")
 
         return JSONResponse(content=preview)
