@@ -58,8 +58,8 @@ async def predict(request: FileURLRequest):
         for col in result_df.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]).columns:
             result_df[col] = result_df[col].astype(str)
 
-        # Return top 10 preview
-        preview = result_df.head(10).to_dict(orient="records")
+        # Return top 50 preview
+        preview = result_df.head(50).to_dict(orient="records")
         print("🚨 Type of result_df:", type(result_df))
         print("🚀 Preview about to send:", preview)
         logging.info("✅ Prediction successful")
@@ -100,7 +100,7 @@ async def process_and_callback(file_url: str, callback_url: str):
         for col in result_df.select_dtypes(include=["datetime64[ns]", "datetime64[ns, UTC]"]).columns:
             result_df[col] = result_df[col].astype(str)
 
-        preview = result_df.head(10).to_dict(orient="records")
+        preview = result_df.head(50).to_dict(orient="records")
         print("🚨 Type of result_df:", type(result_df))
         print("🚀 Preview about to send:", preview)
         requests.post(callback_url, json={"results": preview})
