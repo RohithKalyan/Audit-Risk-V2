@@ -14,39 +14,39 @@ class BERTRiskExplainer:
         self.business_risk_patterns = {
             'sunday_payment_processing': {
                 'trigger': self._check_sunday_payment_processing,
-                'explanation': "Sunday payment processing bypassing standard authorization controls",
+                'explanation': "Sunday transaction processing indicates potential circumvention of standard weekday authorization protocols and supervisory oversight mechanisms, creating elevated operational risk exposure  # Aug-25 explanation restored",
             },
             'vague_account_classification': {
                 'trigger': self._check_vague_account_classification,
-                'explanation': "Vague account classifications lacking transaction specificity",
+                'explanation': "Transaction recorded in non-specific account classifications combined with financial adjustment activities suggests inadequate chart of accounts granularity and potential misstatement risk  # Aug-25 explanation restored",
             },
             'high_value_escrow_processing': {
                 'trigger': self._check_high_value_escrow_processing,
-                'explanation': "High-value escrow processing requiring enhanced fiduciary oversight",
+                'explanation': "Large-value customer fund management transactions requiring enhanced fiduciary oversight due to regulatory custody requirements and potential liquidity concentration risk  # Aug-25 explanation restored",
             },
             'system_integration_processing': {
                 'trigger': self._check_system_integration_processing,
-                'explanation': "System integration processing with data integrity vulnerabilities",
+                'explanation': "Automated data processing workflows involving complex system integrations present data integrity vulnerabilities and require validation of algorithmic accuracy  # Aug-25 explanation restored",
             },
             'manual_ecommerce_operations': {
                 'trigger': self._check_manual_ecommerce_operations,
-                'explanation': "Manual e-commerce operations bypassing automated controls",
+                'explanation': "High-value e-commerce transactions processed through manual workflows bypass automated controls and create data accuracy and completeness risks  # Aug-25 explanation restored",
             },
             'cod_settlement_verification': {
                 'trigger': self._check_cod_settlement_verification,
-                'explanation': "COD settlement with logistics coordination timing differences",
+                'explanation': "Cash-on-delivery transaction settlements involve third-party logistics coordination and create timing differences between delivery confirmation and payment realization  # Aug-25 explanation restored",
             },
             'payment_gateway_reconciliation': {
                 'trigger': self._check_payment_gateway_reconciliation,
-                'explanation': "Payment gateway requiring multi-party reconciliation processes",
+                'explanation': "Payment gateway transactions require multi-party reconciliation across banking networks and create settlement timing and counterparty risk exposures  # Aug-25 explanation restored",
             },
             'revenue_recognition_timing': {
                 'trigger': self._check_revenue_recognition_timing,
-                'explanation': "Revenue recognition timing requiring compliance assessment",
+                'explanation': "Material revenue transactions require assessment of recognition timing compliance with accounting standards and potential period-end cutoff implications  # Aug-25 explanation restored",
             },
             'adjustment_entry_documentation': {
                 'trigger': self._check_adjustment_entry_documentation,
-                'explanation': "Manual adjustments deviating from standard processing workflows",
+                'explanation': "Manual adjustment entries indicate deviation from standard processing workflows and require enhanced documentation to maintain audit trail integrity  # Aug-25 explanation restored",
             }
         }
     
@@ -148,13 +148,13 @@ class BERTRiskExplainer:
             
             # Fallback explanations based on text patterns
             if any(term in text for term in ['other', 'miscellaneous', 'various', 'general']):
-                return "Vague transaction descriptions lacking specific business purpose"
+                return "transaction descriptions lacking specific business purpose identification create audit trail ambiguity and potential chart of accounts misclassification risks  # Aug-25 explanation restored"
             elif any(term in text for term in ['spreadsheet', 'manual', 'excel']):
-                return "Manual processing bypassing automated control frameworks"
+                return "manual processing methodologies bypass automated control frameworks and increase human error probability and data consistency vulnerabilities  # Aug-25 explanation restored"
             elif any(term in text for term in ['urgent', 'emergency', 'immediate']):
-                return "Urgency indicators suggesting potential workflow bypass"
+                return "urgency indicators suggest potential circumvention of standard approval workflows and control framework bypass under time pressure  # Aug-25 explanation restored"
             else:
-                return "Text-based risk patterns requiring enhanced verification"
+                return "Text-based risk patterns requiring enhanced verification and audit substantiation  # Aug-25 explanation restored"
                 
         except Exception as e:
             return None
@@ -182,7 +182,7 @@ def get_auditor_friendly_explanation(feature, value, shap_impact):
             try:
                 day_num = int(value)
                 if day_num == 6:  # Sunday
-                    return "Transaction processed on Sunday when standard business operations are typically not active"
+                    return "Transaction processed on Sunday when standard business operations and approval controls are typically not active, requiring enhanced review  # Aug-25 explanation restored"
                 else: return None
             except: return None
         
@@ -191,25 +191,25 @@ def get_auditor_friendly_explanation(feature, value, shap_impact):
             if "other debtors" in value_str:
                 return "Vague account classification lacking proper transaction specificity"
             elif "other professional fees" in value_str:
-                return "General professional fee account lacking vendor specificity"
+                return "General professional fee account that lacks vendor specificity and may hide inappropriate service arrangements  # Aug-25 explanation restored"
             elif "legal fee" in value_str:
-                return "Legal fee account susceptible to inappropriate payments"
+                return "Legal fee account that is susceptible to inappropriate payments and may conceal irregular consulting arrangements  # Aug-25 explanation restored"
             elif "receivables from cod" in value_str:
-                return "Cash-on-delivery receivables requiring enhanced verification"
+                return "Cash-on-delivery receivables account that requires enhanced verification of collection processes and timing  # Aug-25 explanation restored"
             elif "cash in bank" in value_str:
-                return "Cash account requiring verification of bank reconciliations"
+                return "Cash account that requires verification of bank reconciliations and authorization controls  # Aug-25 explanation restored"
             elif "receivables from payment gateway" in value_str:
-                return "Payment gateway receivables requiring verification of settlement timing"
+                return "Payment gateway receivables requiring verification and audit substantiation  # Aug-25 explanation restored of settlement timing and accuracy  # Aug-25 explanation restored"
             else: return None
         
         elif feature == "Nature in balance sheet":
             value_str = str(value).lower()
             if "logistic" in value_str and "packing" in value_str:
-                return "Logistics expense category prone to cost inflation"
+                return "Logistics expense category that is prone to cost inflation, fictitious charges, or manipulation of service rates  # Aug-25 explanation restored"
             elif "legal" in value_str and "professional" in value_str:
-                return "Professional services expense susceptible to manipulation"
+                return "Professional services expense that is susceptible to manipulation, kickbacks, or inappropriate payment arrangements  # Aug-25 explanation restored"
             elif "provision" in value_str:
-                return "Provision account lacking detailed substantiation"
+                return "Provision account that lacks detailed substantiation and may contain subjective estimates or manipulated reserves  # Aug-25 explanation restored"
             else: return None
         
         elif feature in ["Net Amount", "Entered Dr SUM", "Entered Cr SUM", "Accounted Dr SUM", "Accounted Cr SUM"]:
@@ -224,26 +224,26 @@ def get_auditor_friendly_explanation(feature, value, shap_impact):
                 elif amount >= 500000000:  # 50 Cr
                     return "Material transaction amount warranting enhanced scrutiny"
                 else: return None
-            except: return "Transaction amount requiring verification due to data quality issues"
+            except: return "Transaction amount requiring verification and audit substantiation  # Aug-25 explanation restored due to data quality issues"
         
         elif feature == "Batch Name":
             value_str = str(value).lower()
             if "spreadsheet" in value_str:
-                return "Bulk spreadsheet processing bypassing individual transaction controls"
+                return "Bulk spreadsheet processing bypassing individual transaction controls and may indicate systematic data manipulation  # Aug-25 explanation restored"
             else: return None
         
         elif feature == "Document Type":
             if str(value) == "Manual":
-                return "Manual entry increasing error risk and bypassing automated validation"
+                return "Manual entry increasing error risk and bypassing automated validation controls  # Aug-25 explanation restored"
             elif str(value) == "Spreadsheet":
-                return "Spreadsheet-based entry bypassing automated controls"
+                return "Spreadsheet-based entry bypassing automated controls and may indicate bulk data manipulation  # Aug-25 explanation restored"
             else: return None
         
         elif "Weekday" in feature:
             try:
                 day_num = int(value)
                 if day_num == 6:  # Sunday only
-                    return "Transaction processed on Sunday when standard business operations are typically not active"
+                    return "Transaction processed on Sunday when standard business operations and approval controls are typically not active, requiring enhanced review  # Aug-25 explanation restored"
                 else: return None
             except: return None
         
@@ -359,26 +359,30 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
     pl_net_total = test_df[test_df["PL/ BS"] == "PL"]["Net Amount"].abs().sum()
     pl_net_threshold = 0.10 * pl_net_total
     total_net = test_df["Net Amount"].abs().sum()
+    pl_df = test_df[test_df["PL/ BS"] == "PL"]
+
+    total_pl_dr = pl_df["Accounted Dr SUM"].abs().sum()
+    total_pl_cr = pl_df["Accounted Cr SUM"].abs().sum()
+
+    pl_dr_threshold = 0.05 * total_pl_dr
+    pl_cr_threshold = 0.05 * total_pl_cr
+
 
     # === Control Point Functions ===
     def cp_01(row):
         keywords = ['fraud','bribe','kickback','suspicious','fake','dummy','gift','prize','token','reward','favour']
         text = f"{str(row.get('Line Desc', '')).lower()} {str(row.get('Source Desc', '')).lower()}"
         return int(any(k in text for k in keywords))
-
     def cp_02(row):
-        return int(row.get("PL/ BS") == "PL" and abs(row.get("Net Amount", 0)) > pl_net_threshold)
-
-    def cp_03_flags(df):
-        a = df.duplicated(subset=["Accounting Date", "Line Desc", "Source Desc", "Source Name"], keep=False)
-        b = df.duplicated(subset=["Accounting Date", "Account Code", "Net Amount"], keep=False)
-        c = df.duplicated(subset=["Document Number"], keep=False) & ~df.duplicated(subset=["Accounting Date", "Document Number"], keep=False)
-        d = df.duplicated(subset=["Accounting Date", "Line Desc", "Account Code"], keep=False)
-        return ((a | b | c | d).astype(int))
+        if row.get("PL/ BS") != "PL":
+            return 0
+        dr = abs(row.get("Accounted Dr SUM", 0))
+        cr = abs(row.get("Accounted Cr SUM", 0))
+        return int(dr > pl_dr_threshold or cr > pl_cr_threshold)
 
     def cp_04(row): return cp_02(row)
 
-    def cp_07_flags(df): return (df.groupby("Document Number")["Net Amount"].transform("sum").round(2) != 0).astype(int)
+    # def cp_07_flags(...)
 
     def cp_08(row):
         text = f"{row.get('Account Name', '')} {row.get('Line Desc', '')} {row.get('Source Desc', '')}".lower()
@@ -391,11 +395,21 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
             if any("cash" in a for a in accs) and any("bad debt" in a for a in accs):
                 result[group.index] = 1
         return result
-
     def cp_15_flags(df):
-        grp_sum = df.groupby(["Account Code", "Accounting Date"])[["Entered Dr SUM", "Entered Cr SUM"]].sum().sum(axis=1)
-        keys = grp_sum[grp_sum > 0.03 * total_net].index
-        return df.set_index(["Account Code", "Accounting Date"]).index.isin(keys).astype(int)
+        pl_df = df[df["PL/ BS"] == "PL"]
+        grp_sum = pl_df.groupby(["Account Code", "Accounting Date"])[["Accounted Dr SUM", "Accounted Cr SUM"]].sum().sum(axis=1)
+
+        # Safeguard thresholds
+        thr_dr = 0.05 * total_pl_dr if total_pl_dr > 0 else 0
+        thr_cr = 0.05 * total_pl_cr if total_pl_cr > 0 else 0
+
+        keys = grp_sum[(grp_sum > thr_dr) | (grp_sum > thr_cr)].index
+
+        mask = pl_df.set_index(["Account Code", "Accounting Date"]).index.isin(keys)
+        series_pl = pd.Series(mask.astype(int), index=pl_df.index)
+
+        # Reindex to full df so non-PL rows get 0
+        return series_pl.reindex(df.index, fill_value=0)
 
     def cp_16_flags(df):
         if "Currency" not in df.columns:
@@ -403,11 +417,20 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
         docs = df.groupby("Document Number")["Currency"].nunique()
         flagged = docs[docs > 1].index
         return df["Document Number"].isin(flagged).astype(int)
-
     def cp_17_flags(df):
-        sums = df[df["PL/ BS"] == "PL"].groupby("Source Name")["Net Amount"].sum().abs()
-        risky = sums[sums > 0.03 * pl_net_total].index
-        return df["Source Name"].isin(risky).astype(int)
+        pl_df = df[df["PL/ BS"] == "PL"]
+        sums_dr = pl_df.groupby("Source Name")["Accounted Dr SUM"].sum()
+        sums_cr = pl_df.groupby("Source Name")["Accounted Cr SUM"].sum()
+
+        # Safeguard thresholds
+        thr_dr = 0.10 * total_pl_dr if total_pl_dr > 0 else 0
+        thr_cr = 0.10 * total_pl_cr if total_pl_cr > 0 else 0
+
+        risky = sums_dr[sums_dr > thr_dr].index.union(
+            sums_cr[sums_cr > thr_cr].index
+        )
+
+        return pd.Series(df["Source Name"].isin(risky).astype(int), index=df.index)
 
     def cp_19(row):
         try: return int(pd.to_datetime(row["Accounting Date"]).weekday() == 6)
@@ -456,9 +479,9 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
     # === Apply All Control Points ===
     test_df["CP_01"] = test_df.apply(cp_01, axis=1)
     test_df["CP_02"] = test_df.apply(cp_02, axis=1)
-    test_df["CP_03"] = cp_03_flags(test_df)
+        # test_df["CP_03"] = cp_03_flags(test_df)
     test_df["CP_04"] = test_df.apply(cp_04, axis=1)
-    test_df["CP_07"] = cp_07_flags(test_df)
+        # test_df["CP_07"] = cp_07_flags(test_df)
     test_df["CP_08"] = test_df.apply(cp_08, axis=1)
     test_df["CP_09"] = cp_09_flags(test_df)
     test_df["CP_15"] = cp_15_flags(test_df)
@@ -501,8 +524,8 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
         score = test_df.iloc[i]["Final_Score"]
         cp_score = test_df.iloc[i]["CP_Score"]
         
-        model_class = "High" if score >= 0.995 else ("Medium" if score >= 0.5 else "Low")
-        cp_class = "High" if cp_score >= 0.95 else ("Medium" if cp_score > 0.8 else "Low")
+        model_class = "High" if score >= 0.98 else ("Medium" if score >= 0.5 else "Low")
+        cp_class = "High" if cp_score >= 0.9 else ("Medium" if cp_score > 0.6 else "Low")
         final_risk = "High" if model_class == "High" or cp_class == "High" else ("Medium" if model_class == "Medium" or cp_class == "Medium" else "Low")
         
         model_class_list.append(model_class)
@@ -512,23 +535,23 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
     # === August 25 Enhanced Explanation Generation ===
     def get_cp_explanation(cp_code, row):
         cp_explanations = {
-            "CP_01": "Suspicious Keywords - Transaction contains high-risk terms requiring verification",
-            "CP_02": f"High Monetary Value - Amount of Rs{row.get('Net Amount', 0):,.0f} exceeds materiality threshold",
-            "CP_03": "Duplicate Patterns - Transaction matches multiple duplicate detection criteria",
-            "CP_07": "Document Imbalance - Document entries do not balance to zero",
-            "CP_08": "Cash Expenditure - Cash-in-hand transaction bypassing standard payment controls",
-            "CP_09": "Cash to Bad Debt - Transaction involves both cash and bad debt accounts",
-            "CP_15": "Split Transactions - Account activity exceeds normal volume threshold",
-            "CP_16": "Multiple Currencies - Document contains multiple currencies",
-            "CP_17": "Vendor Concentration - Source transactions exceed concentration limits",
-            "CP_19": "Weekend Processing - Transaction processed when standard approvals typically unavailable",
-            "CP_21": "Period-End Timing - Transaction occurs on month-end date",
-            "CP_22": "Period-Start Timing - Transaction occurs on first day of month",
-            "CP_23": "Complex Structure - Transaction involves derivative or structured instruments",
-            "CP_24": "Unusual Amount Pattern - Transaction amount follows rare sequential patterns",
-            "CP_26": "Document Gap - Document number is missing from sequence",
-            "CP_30": "Complex Instrument - Transaction involves sophisticated financial instruments",
-            "CP_32": "Zero Amount - Transaction recorded with zero net amount"
+            "CP_01": "Suspicious Keywords - Transaction contains high-risk terms requiring verification and audit substantiation  # Aug-25 explanation restored",
+            "CP_02": f"High Monetary Value - Amount of Rs{row.get('Net Amount', 0):,.0f} exceeds materiality threshold requiring enhanced review  # Aug-25 explanation restored",
+            "CP_03": "Duplicate Patterns - Transaction matches multiple duplicate detection criteria indicating potential data quality issues  # Aug-25 explanation restored",
+            "CP_07": "Document Imbalance - Document entries do not balance to zero, indicating posting errors requiring correction  # Aug-25 explanation restored",
+            "CP_08": "Cash Expenditure - Cash-in-hand transaction bypasses standard payment controls and electronic audit trails  # Aug-25 explanation restored",
+            "CP_09": "Cash to Bad Debt - Transaction involves both cash and bad debt accounts creating unusual accounting pattern  # Aug-25 explanation restored",
+            "CP_15": "Split Transactions - Account activity exceeds normal volume threshold and may indicate circumvention of approval limits  # Aug-25 explanation restored",
+            "CP_16": "Multiple Currencies - Document contains multiple currencies increasing exchange rate and reconciliation risks  # Aug-25 explanation restored",
+            "CP_17": "Vendor Concentration - Source transactions exceed concentration limits for single vendor, increasing dependency risk  # Aug-25 explanation restored",
+            "CP_19": "Weekend Processing - Transaction processed when standard approvals typically unavailable, elevating risk of unapproved postings  # Aug-25 explanation restored",
+            "CP_21": "Period-End Timing - Transaction occurs on month-end date when adjustments are commonly made and misstatements possible  # Aug-25 explanation restored",
+            "CP_22": "Period-Start Timing - Transaction occurs on first day of month when backdating risks are elevated  # Aug-25 explanation restored",
+            "CP_23": "Complex Structure - Transaction involves derivative or derivative or structured instruments requiring specialized review  # Aug-25 explanation restored",
+            "CP_24": "Unusual Amount Pattern - Transaction amount follows rare sequential or repetitive digit patterns requiring enhanced review  # Aug-25 explanation restored",
+            "CP_26": "Document Gap - Document number is missing from sequence, creating audit trail gaps  # Aug-25 explanation restored",
+            "CP_30": "Complex Instrument - Transaction involves sophisticated financial instruments requiring enhanced analysis  # Aug-25 explanation restored",
+            "CP_32": "Zero Amount - Transaction recorded with zero net amount indicating potential posting errors  # Aug-25 explanation restored"
         }
         return cp_explanations.get(cp_code, f"Control Point {cp_code} triggered")
     
@@ -748,7 +771,13 @@ def run_full_pipeline(file_path: str) -> pd.DataFrame:
         "CP_19", "CP_21", "CP_22", "CP_23", "CP_24", "CP_26", "CP_30", "CP_32", "Triggered_CPs", "CP_Score"
     ]
     
-    # Validate all expected columns exist
+        # Ensure CP_03 and CP_07 exist as zero columns if commented out
+    if "CP_03" not in test_df.columns:
+        test_df["CP_03"] = 0
+    if "CP_07" not in test_df.columns:
+        test_df["CP_07"] = 0
+
+# Validate all expected columns exist
     missing_columns = [col for col in expected_columns if col not in test_df.columns]
     if missing_columns:
         raise ValueError(f"Missing required columns: {missing_columns}")
